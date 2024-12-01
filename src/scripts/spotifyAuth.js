@@ -5,7 +5,7 @@ class SpotifyAuth {
     this.authorizationEndpoint = "https://accounts.spotify.com/authorize";
     this.tokenEndpoint = "https://accounts.spotify.com/api/token";
     this.scope =
-      "user-read-private playlist-modify-private user-library-modify user-library-read user-read-email";
+      "user-read-private playlist-modify-private user-library-modify user-library-read user-read-email user-read-recently-played";
 
     // not currently working properly
     this.currentToken = {
