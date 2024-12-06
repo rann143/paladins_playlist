@@ -12,6 +12,7 @@ export default function PlaylistDetails() {
 
   useEffect(() => {
     if (!fetchComplete.current) {
+      //fetchPlaylist();
       fetchPlaylist();
       fetchComplete.current = true;
     }
@@ -36,20 +37,30 @@ export default function PlaylistDetails() {
 
     const data = await response.json();
 
-    const tracks = new Set();
-    data.items.forEach((item) => {
-      const id = item.track.id;
-      tracks.add(id);
-    });
-
-    setPlaylist(tracks);
-
     const artists = new Set();
-    data.items.forEach((item) => {
-      const id = item.track.artists[0].id;
-      artists.add(id);
+    const genreToTracks = new Map();
+
+    const getOrCreate = (key) => {
+      if (!genreToTracks.has(key)) genreToTracks.set(key, new Set());
+      return genreToTracks.get(key);
+    };
+
+    data.items.forEach(async (item) => {
+      const id = item.track.id;
+      const aId = item.track.artists[0].id;
+
+      if (!artists.has(aId)) {
+        artists.add(aId);
+        const genres = await fetchGenres(aId);
+
+        genres.forEach((genre) => {
+          getOrCreate(genre);
+          genreToTracks.get(genre).add(id);
+        });
+      }
     });
-    setArtistIds(artists);
+
+    setSongsByGenre(genreToTracks);
 
     if (isLoading) {
       setIsLoading(false);
@@ -58,9 +69,9 @@ export default function PlaylistDetails() {
     return data;
   }
 
-  async function fetchGenres(artistIds = []) {
+  async function fetchGenres(artistId) {
     const response = await fetch(
-      `https://api.spotify.com/v1/artists?ids=${artistIds.join(",")}`,
+      `https://api.spotify.com/v1/artists/${artistId}`,
       {
         method: "GET",
         headers: {
@@ -70,26 +81,25 @@ export default function PlaylistDetails() {
     );
 
     if (!response.ok) {
-      throw new Error(
-        `Could not get user data: ${data.error} - ${data.error_description}`
-      );
+      throw new Error(`Could not get data`);
     }
 
-    const data = response.json();
+    const data = await response.json();
 
     if (isLoading) {
       setIsLoading(false);
     }
 
-    return data;
+    return data.genres;
   }
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  console.log(playlist);
-  console.log(artistIds);
+  //   console.log(playlist);
+  //   console.log(artistIds);
+  console.log(songsByGenre);
 
   return <div></div>;
 }
