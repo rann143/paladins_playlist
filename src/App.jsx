@@ -5,12 +5,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import SpotifyInfo from "./components/SpotifyInfo";
+import PlaylistDetails from "./components/PlaylistDetails";
 import { SpotifyAuth } from "./scripts/spotifyAuth";
 import LoggedInOutContext from "./Contexts";
 import "./App.css";
 
 function App() {
-  const { name } = useParams();
+  const { name, playlistid } = useParams();
   const [spotAuth, setSpotAuth] = useState(new SpotifyAuth());
   const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +68,9 @@ function App() {
   return (
     <LoggedInOutContext.Provider value={{ loggedIn, setLoggedIn }}>
       <div>
-        {name === "spotify" ? (
+        {name === "spotify" && playlistid ? (
+          <SpotifyInfo spotAuth={spotAuth} />
+        ) : name === "spotify" ? (
           <SpotifyInfo spotAuth={spotAuth} />
         ) : name === "login" ? (
           <Login spotAuth={spotAuth} />

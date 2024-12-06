@@ -4,7 +4,7 @@ import ErrorPage from "./components/ErrorPage";
 
 const routes = [
   {
-    path: "/:name?/",
+    path: "/:name?/:playlistid?",
     element: <App />,
     errorElement: <ErrorPage />,
   },
