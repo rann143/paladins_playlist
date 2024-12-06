@@ -69,7 +69,7 @@ function App() {
     <LoggedInOutContext.Provider value={{ loggedIn, setLoggedIn }}>
       <div>
         {name === "spotify" && playlistid ? (
-          <SpotifyInfo spotAuth={spotAuth} />
+          <PlaylistDetails />
         ) : name === "spotify" ? (
           <SpotifyInfo spotAuth={spotAuth} />
         ) : name === "login" ? (
