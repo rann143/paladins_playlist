@@ -12,12 +12,6 @@ export default function Home({ spotAuth }) {
     window.location.href = spotAuth.redirectUrl;
   }
 
-  //   async function refreshTokenClick() {
-  //     const token = await spotAuth.refreshToken();
-  //     spotAuth.currentToken.save(token);
-  //     renderTemplate("oauth", "oauth-template", currentToken);
-  //   }
-
   return (
     <div>
       <h1>Playlist Paladin Home</h1>
