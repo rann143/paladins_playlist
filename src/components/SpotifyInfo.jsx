@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Simulate } from "react-dom/test-utils";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function SpotifyInfo({ spotAuth }) {
-  const fetchComplete = useRef(false); // Add this ref to track if auth check has run
+  const fetchComplete = useRef(false); // Add this ref to track if fetches has run
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [playlists, setPlaylists] = useState([]);
@@ -108,7 +107,8 @@ export default function SpotifyInfo({ spotAuth }) {
   const myPlaylistNames = playlists.map((item, index) => {
     return (
       <li key={index}>
-        {item.name} | Songs: {item.tracks.total}
+        <Link to={`/spotify/${item.id}`}>{item.name}</Link> | Songs:{" "}
+        {item.tracks.total}
       </li>
     );
   });
