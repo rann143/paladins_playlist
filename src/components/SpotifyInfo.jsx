@@ -6,7 +6,8 @@ export default function SpotifyInfo({ spotAuth }) {
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const [playlists, setPlaylists] = useState([]);
-  const navigate = useNavigate();
+  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  //const navigate = useNavigate();
 
   useEffect(() => {
     if (!fetchComplete.current) {
@@ -86,10 +87,8 @@ export default function SpotifyInfo({ spotAuth }) {
     }
 
     const data = await response.json();
-    data.items.forEach((item) => {
-      let track = item.track;
-      console.log(track.artists[0].name + " - " + track.name);
-    });
+
+    setRecentlyPlayed(data.items.slice(0, 5));
 
     if (isLoading) {
       setIsLoading(false);
@@ -98,11 +97,17 @@ export default function SpotifyInfo({ spotAuth }) {
     return data;
   }
 
-  console.log(userData);
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const recents = recentlyPlayed.map((item, index) => {
+    return (
+      <li key={index}>
+        <p>{item.track.name + " by " + item.track.artists[0].name}</p>
+      </li>
+    );
+  });
 
   const myPlaylistNames = playlists.map((item, index) => {
     return (
@@ -122,6 +127,9 @@ export default function SpotifyInfo({ spotAuth }) {
       <a href={userData.external_urls.spotify} target="_blank">
         Open Spotify
       </a>
+
+      <h2>Recently Played</h2>
+      <ul>{recents}</ul>
 
       <h2>Playlists</h2>
       <div>
